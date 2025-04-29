@@ -110,7 +110,7 @@ pip install -r requirements.txt
 3. Run the application:
 
 ```bash
-streamlit run resume_matcher.py
+streamlit run app.py
 ```
 
 4. Access it in your browser at `http://localhost:8501`
