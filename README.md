@@ -97,8 +97,8 @@ Built using **Streamlit**, the UI includes:
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/resume-matcher.git
-cd resume-matcher
+git clone https://github.com/rythmokay/resume-checker.git
+cd resume-checker
 ```
 
 2. Create a virtual environment and install dependencies:
