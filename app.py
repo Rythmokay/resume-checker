@@ -21,14 +21,23 @@ import math
 def download_nltk_data():
     """Download required NLTK resources if not already available."""
     try:
+        # First try to find the resources
         nltk.data.find('tokenizers/punkt')
         nltk.data.find('corpora/stopwords')
         nltk.data.find('corpora/wordnet')
     except LookupError:
+        # If any resource is not found, download all required resources
         with st.spinner('Downloading required language data...'):
             nltk.download('punkt', quiet=True)
             nltk.download('stopwords', quiet=True)
             nltk.download('wordnet', quiet=True)
+            
+    # Explicitly verify punkt is available (to prevent punkt_tab error)
+    try:
+        nltk.data.find('tokenizers/punkt/english.pickle')
+    except LookupError:
+        with st.spinner('Downloading additional language data...'):
+            nltk.download('punkt', quiet=True)
 
 # Text processing functions
 def process_text(text):
