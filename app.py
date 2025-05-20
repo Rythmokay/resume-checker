@@ -11,7 +11,7 @@ import re
 import io
 import plotly.graph_objects as go
 import nltk
-from nltk.tokenize import word_tokenize
+# No longer using word_tokenize, using regex instead
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from collections import Counter
@@ -20,24 +20,12 @@ import math
 # Ensure required NLTK data is available
 def download_nltk_data():
     """Download required NLTK resources if not already available."""
-    try:
-        # First try to find the resources
-        nltk.data.find('tokenizers/punkt')
-        nltk.data.find('corpora/stopwords')
-        nltk.data.find('corpora/wordnet')
-    except LookupError:
-        # If any resource is not found, download all required resources
-        with st.spinner('Downloading required language data...'):
-            nltk.download('punkt', quiet=True)
-            nltk.download('stopwords', quiet=True)
-            nltk.download('wordnet', quiet=True)
-            
-    # Explicitly verify punkt is available (to prevent punkt_tab error)
-    try:
-        nltk.data.find('tokenizers/punkt/english.pickle')
-    except LookupError:
-        with st.spinner('Downloading additional language data...'):
-            nltk.download('punkt', quiet=True)
+    # Download all required resources without checking first
+    # This is more reliable on Streamlit Cloud
+    with st.spinner('Downloading required language data...'):
+        nltk.download('stopwords', quiet=True)
+        nltk.download('wordnet', quiet=True)
+        # We'll use a regex-based tokenizer instead of punkt to avoid the punkt_tab error
 
 # Text processing functions
 def process_text(text):
@@ -54,9 +42,13 @@ def process_text(text):
     stop_words = set(stopwords.words('english'))
     lemmatizer = WordNetLemmatizer()
     
-    # Process text
-    tokens = word_tokenize(text.lower())
-    tokens = [lemmatizer.lemmatize(token) for token in tokens if token.isalnum()]
+    # Process text using regex-based tokenization instead of word_tokenize
+    # This avoids the punkt_tab dependency issue on Streamlit Cloud
+    text = text.lower()
+    # Simple regex to split on non-alphanumeric characters
+    raw_tokens = re.findall(r'\w+', text)
+    # Apply lemmatization and stopword removal
+    tokens = [lemmatizer.lemmatize(token) for token in raw_tokens if token.isalnum()]
     tokens = [token for token in tokens if token not in stop_words]
     return tokens
 
